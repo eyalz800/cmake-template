@@ -7,10 +7,6 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-file(GLOB_RECURSE ${PROJECT_NAME}_headers CONFIGURE_DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
-
 file(GLOB_RECURSE ${PROJECT_NAME}_sources CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.S
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
@@ -21,7 +17,7 @@ file(GLOB_RECURSE ${PROJECT_NAME}_modules CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cppm)
 
 add_executable(${PROJECT_NAME}
-    ${${PROJECT_NAME}_sources} ${${PROJECT_NAME}_modules} ${${PROJECT_NAME}_headers})
+    ${${PROJECT_NAME}_sources} ${${PROJECT_NAME}_modules})
 
 target_include_directories(${PROJECT_NAME} PRIVATE inc include)
 
