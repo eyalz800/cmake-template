@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(project)
+project(main)
 enable_language(ASM)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
@@ -24,7 +24,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE inc include)
 target_sources(${PROJECT_NAME} PRIVATE FILE_SET module_files TYPE CXX_MODULES BASE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/src FILES ${${PROJECT_NAME}_modules})
 
-if (MSVC)
+if (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /O0 /DEBUG")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} /O2")
     target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
@@ -32,4 +32,9 @@ else()
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        target_compile_options(${PROJECT_NAME} PRIVATE -stdlib=libc++ -fmodules)
+        target_link_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
+    endif()
 endif()
