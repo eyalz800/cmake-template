@@ -6,6 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_SCAN_FOR_MODULES ON)
 
 file(GLOB_RECURSE ${PROJECT_NAME}_sources CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.S
@@ -34,7 +35,7 @@ else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        target_compile_options(${PROJECT_NAME} PRIVATE -stdlib=libc++ -fmodules)
+        target_compile_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
         target_link_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
     endif()
 endif()
