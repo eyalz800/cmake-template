@@ -26,16 +26,22 @@ target_sources(${PROJECT_NAME} PRIVATE FILE_SET module_files TYPE CXX_MODULES BA
     ${CMAKE_CURRENT_SOURCE_DIR}/src FILES ${${PROJECT_NAME}_modules})
 
 if (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /O0")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} /O2")
-    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX
+        $<$<CONFIG:Debug>:/O0>
+        $<$<CONFIG:Release>:/O2>)
 else()
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror
+        $<$<CONFIG:Debug>:-O0>
+        $<$<CONFIG:Release>:-O2>)
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         target_compile_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
         target_link_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
     endif()
+
+    add_custom_command(
+        TARGET "${PROJECT_NAME}" POST_BUILD
+        DEPENDS "${PROJECT_NAME}"
+        COMMAND "$<$<CONFIG:Release>:${CMAKE_STRIP}>"
+        ARGS "${PROJECT_NAME}")
 endif()
