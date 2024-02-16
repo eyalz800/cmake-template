@@ -49,8 +49,6 @@ else()
             FetchContent_MakeAvailable(std)
             target_link_libraries(std.compat std)
 
-            target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fprebuilt-module-path=${std_BINARY_DIR}/CMakeFiles/std.dir/>)
-            target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fprebuilt-module-path=${std_BINARY_DIR}/CMakeFiles/std.compat.dir/>)
             target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-nostdinc++>)
             target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-isystem>)
             target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${LIBCXX_BUILD}/include/c++/v1>)
@@ -58,6 +56,7 @@ else()
             target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-nostdlib++>)
             target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-L${LIBCXX_BUILD}/lib>)
             target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wl,-rpath,${LIBCXX_BUILD}/lib>)
+
             target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wl,-no_warn_duplicate_libraries>)
 
             target_link_libraries(${PROJECT_NAME} PRIVATE std c++)
