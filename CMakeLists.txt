@@ -35,8 +35,34 @@ else()
         $<$<CONFIG:Release>:-O2>)
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        target_compile_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
-        target_link_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
+        if (NOT LIBCXX_BUILD)
+            target_compile_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
+            target_link_options(${PROJECT_NAME} PRIVATE -stdlib=libc++)
+        else()
+            include(FetchContent)
+            FetchContent_Declare(
+                std
+                URL "file://${LIBCXX_BUILD}/modules/c++/v1"
+                DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+                SYSTEM
+                )
+            FetchContent_MakeAvailable(std)
+            target_link_libraries(std.compat std)
+
+            target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fprebuilt-module-path=${std_BINARY_DIR}/CMakeFiles/std.dir/>)
+            target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fprebuilt-module-path=${std_BINARY_DIR}/CMakeFiles/std.compat.dir/>)
+            target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-nostdinc++>)
+            target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-isystem>)
+            target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${LIBCXX_BUILD}/include/c++/v1>)
+
+            target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-nostdlib++>)
+            target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-L${LIBCXX_BUILD}/lib>)
+            target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wl,-rpath,${LIBCXX_BUILD}/lib>)
+            target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wl,-no_warn_duplicate_libraries>)
+
+            target_link_libraries(${PROJECT_NAME} PRIVATE std c++)
+            target_link_libraries(${PROJECT_NAME} PRIVATE std.compat c++)
+        endif()
     endif()
 
     add_custom_command(
