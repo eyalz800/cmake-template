@@ -27,11 +27,11 @@ target_sources(${PROJECT_NAME} PRIVATE FILE_SET module_files TYPE CXX_MODULES BA
 
 if (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
     target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX
-        $<$<CONFIG:Debug>:/O0>
+        $<$<CONFIG:Debug>:/DEBUG /Zi /O0>
         $<$<CONFIG:Release>:/O2>)
 else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror
-        $<$<CONFIG:Debug>:-O0>
+        $<$<CONFIG:Debug>:-g -O0>
         $<$<CONFIG:Release>:-O2>)
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
