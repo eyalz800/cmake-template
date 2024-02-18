@@ -57,8 +57,6 @@ else()
             target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-L${LIBCXX_BUILD}/lib>)
             target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wl,-rpath,${LIBCXX_BUILD}/lib>)
 
-            target_link_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-Wl,-no_warn_duplicate_libraries>)
-
             target_link_libraries(${PROJECT_NAME} PRIVATE std c++)
             target_link_libraries(${PROJECT_NAME} PRIVATE std.compat c++)
         endif()
