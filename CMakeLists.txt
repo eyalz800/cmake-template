@@ -29,7 +29,7 @@ if (CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
         $<$<CONFIG:Release>:/O2>)
 else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror
-        $<$<CONFIG:Debug>:-g -O0>
+        $<$<CONFIG:Debug>:-gdwarf-2 -O0>
         $<$<CONFIG:Release>:-O2>)
 
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
